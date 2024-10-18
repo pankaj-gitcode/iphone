@@ -40,7 +40,8 @@ export const Hero = ()=>{
         },{
             opacity:1,
             y:0,
-            duration:1
+            duration:1,
+            delay:1
         })
     }, [])
 
@@ -61,7 +62,8 @@ export const Hero = ()=>{
 
             {/* -------------- BUTTON & SUBCRIPTION FEE -------------- */}
             <div id='btnSub' className='flex flex-col items-center justify-center gap-5 opacity-0'>
-                <button className='bg-blue py-2 px-5 rounded-2xl '>Buy</button>
+                <button className='bg-blue py-2 px-5 rounded-2xl hover:bg-black hover:border-2 hover:border-blue shadow-[2px_2px_5px_3px_rgba(255,255,255,0.2)] '>Buy</button>
+
                 <h1 className='font-semibold text-xl lg:text-lg'>From $199/month or $999</h1>
             </div>
 
