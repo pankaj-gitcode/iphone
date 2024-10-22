@@ -3,13 +3,8 @@ import { hightlightsSlides } from '../constants'
 
 export const Highlights = ()=>{
     return(<div>
-        <div>
-            {
-                hightlightsSlides.map(elem=>
-                <div key={elem.id}>
-                    <p>{elem.video}</p>
-                </div>)
-            }
+        <div className='bg-[#101010] py-28 pl-6 w-full '>
+            <h1 className='text-3xl text-gray font-semibold'>Get the highlights.</h1>
         </div>
     </div>)
 }
