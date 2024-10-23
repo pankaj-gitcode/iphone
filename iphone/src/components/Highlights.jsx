@@ -33,13 +33,14 @@ export const Highlights = ()=>{
                     <h1 id='title' className='section-heading'>
                         Get the highlights.</h1>
                 </div>
-                <div className='flex gap-2 text-xl'>
+                <div className='flex flex-wrap justify-start lg:justify-end gap-3 text-xl mb-6'>
                     <h2 className='text-blue hover:underline hover:cursor-pointer opacity-0 translate-y-20 watchFilm'>Watch the film</h2>
                     <img src={watchImg} alt="watching_img" className='watchFilm opacity-0 translate-y-20'/>
 
                     <h2 className='text-blue pl-6 hover:underline hover:cursor-pointer opacity-0 translate-y-20 watchEvent'>Watch the event </h2>
                     <img src={rightImg} alt="rightDir_img" className='watchEvent opacity-0 translate-y-20'/>
                 </div>
+                <VideoCarousel/>
             </div>
         </section>
 
