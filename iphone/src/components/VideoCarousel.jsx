@@ -48,6 +48,11 @@ export const VideoCarousel = () => {
         })
     }, [videoId, startPlay])
 
+    // handleProcess: switch for each video case: play, reset, video-end, pause; 'i' is the video id till id=3
+    const handleProcess = (type, i)=>{
+
+    }
+
   return (<>
     <div className='flex items-center'>
         {
