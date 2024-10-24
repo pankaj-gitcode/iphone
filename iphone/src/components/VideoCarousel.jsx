@@ -12,6 +12,9 @@ export const VideoCarousel = () => {
         videoId:0,startPlay:false, isPlaying:false, isEnd:false, 
         isLastVideo:false
     })
+
+    // destructure (extract) all the above video properties
+    const {videoId, startPlay, isPlaying, isEnd, isLastVideo} = video;
   return (<>
     <div className='flex items-center'>
         {
