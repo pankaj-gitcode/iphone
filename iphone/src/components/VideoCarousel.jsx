@@ -1,5 +1,7 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { hightlightsSlides } from '../constants'
+import gsap from 'gsap';
+import { pauseImg, playImg, replayImg } from '../utils';
 
 export const VideoCarousel = () => {
     // useRefs
@@ -12,9 +14,40 @@ export const VideoCarousel = () => {
         videoId:0,startPlay:false, isPlaying:false, isEnd:false, 
         isLastVideo:false
     })
+    // loadData array
+    const [loadedData, setLoadedData] = useState([]);
 
     // destructure (extract) all the above video properties
     const {videoId, startPlay, isPlaying, isEnd, isLastVideo} = video;
+
+    // videos performance in the loadedData array
+    useEffect(()=>{
+        // pause the video if we came to end and no longer playing the video
+        if(loadedData.length > 3){
+            videoRef.current[videoId].pause();
+        }
+        // if video is playing & startPlay is also true then current whatever video should play
+        else{
+            startPlay && videoRef.current[videoId].play();
+        }
+    }, [videoId, startPlay, isPlaying, loadedData])
+
+
+    // when videoId changes & video start to play
+    useEffect(()=>{
+        // initial video progress is 0
+        const currentProgress = 0;
+
+        //grab the video <span> element
+        let span = videoSpanRef.current;
+
+        // animate the progress of video
+        let anim = gsap.to(span[videoId], {
+            onUpdate: ()=>{},
+            onComplete: ()=>{}
+        })
+    }, [videoId, startPlay])
+
   return (<>
     <div className='flex items-center'>
         {
@@ -29,22 +62,59 @@ export const VideoCarousel = () => {
                             muted 
                             playsInline={true} 
                             preload='auto'
+
+                            ref={(el)=>videoRef.current[i] = el}
+
+                            onPlay={()=>setVideo(prev=>({
+                                ...prev, isPlaying:true
+                            }))}
                             >
                                 <source src={list.video} type='video/mp4'/>
                             </video>
                         </div>
                         {/* -------- TEXT ON VIDEO ---------- */}
                         <div className='absolute top-12 left-10 text-xl md:text-2xl sm:text-xl font-medium z-10'>
-                            {list.textLists.map((elem, i)=>(
-                                <p key={i}>{elem}</p>
+                            {list.textLists.map(text=>(
+                                <p key={text}>{text}</p>
                             ))}
                         </div>
                     </div>
-
                 </div>
             ))
-        }
-        
+        }  
+    </div>
+        {/* ----------- VIDEO PROGRESSION BAR ------------ */}
+    <div className='relative flex items-center justify-center mt-10'>
+             {/* video progression main conatianer */}
+        <div className=' flex items-center justify-center backdrop-blur bg-gray-300 px-7 py-5 rounded-full '>
+            {/* return the span element with each video items in videoRef array */}
+                        {/*--------progress container for each new video-------- */}
+            {
+                videoRef.current.map((_,i)=>(
+                    <span key={i}
+                    ref={(el)=>videoDivRef.current[i] = el}
+                    className='relative mx-2 w-3 h-3 rounded-full bg-gray-200 cursor-pointer'
+                    >
+                     {/* create a progression for each video */}
+                     <span
+                        className='absolute w-full h-full rounded-full'
+                        // grab this span element
+                        ref = {el=>videoSpanRef.current[i] = el}
+                     />
+                    </span>
+                ))
+            }
+        </div>
+            <div className='flex items-center justify-center bg-gray-300 backdrop-blur px-7 py-5 rounded-full ml-3'>
+               <img src={isLastVideo? replayImg: isPlaying? playImg:pauseImg} 
+                alt={isLastVideo?'replay':isPlaying?'play':'pause'} 
+                onClick={
+                    isLastVideo?()=>handleProcess('video-reset'):
+                    isPlaying?()=>handleProcess('play'):()=>handleProcess('pause')
+                }
+
+                /> 
+            </div>
     </div>
   </> )
 }
