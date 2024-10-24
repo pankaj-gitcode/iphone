@@ -26,14 +26,14 @@ export const VideoCarousel = () => {
         if(loadedData.length > 3){
             videoRef.current[videoId].pause();
         }
-        // if video is playing & startPlay is also true then current whatever video should play
+        // if video is playing & startPlay is also true then currently whatever video should play
         else{
             startPlay && videoRef.current[videoId].play();
         }
     }, [videoId, startPlay, isPlaying, loadedData])
 
 
-    // when videoId changes & video start to play
+    // videoId changes & video start to play
     useEffect(()=>{
         // initial video progress is 0
         const currentProgress = 0;
@@ -50,7 +50,38 @@ export const VideoCarousel = () => {
 
     // handleProcess: switch for each video case: play, reset, video-end, pause; 'i' is the video id till id=3
     const handleProcess = (type, i)=>{
+        switch (key) {
+            case 'video-end':
+                setVideo(prev=>({
+                    ...prev, isEnd:true, videoId: i+1
+                }))
+                break;
+            case 'video-last':
+                setVideo(prev=>({
+                    ...prev, isLastVideo:true
+                }))
+                break;
 
+            case 'video-reset':
+                setVideo(prev=>({
+                    ...prev, videoId:0, isLastVideo:false
+                }))
+                break;
+
+            case 'play':
+                setVideo(prev=>({
+                    ...prev, isPlaying: !prev.isPlaying
+                }))
+            break;
+            
+            case 'pause':
+                setVideo(prev=>({
+                    ...prev, isPlaying:!prev.isPlaying
+                }))
+                break;
+            default:
+                break;
+        }
     }
 
   return (<>
@@ -110,16 +141,16 @@ export const VideoCarousel = () => {
                 ))
             }
         </div>
-            <div className='flex items-center justify-center bg-gray-300 backdrop-blur px-7 py-5 rounded-full ml-3'>
-               <img src={isLastVideo? replayImg: isPlaying? playImg:pauseImg} 
-                alt={isLastVideo?'replay':isPlaying?'play':'pause'} 
+            <button className='flex items-center justify-center bg-gray-300 backdrop-blur p-4 rounded-full ml-3'>
+               <img src={isLastVideo? replayImg: isPlaying? pauseImg:playImg} 
+                alt={isLastVideo?'replay':isPlaying?'pause':'play'} 
                 onClick={
                     isLastVideo?()=>handleProcess('video-reset'):
-                    isPlaying?()=>handleProcess('play'):()=>handleProcess('pause')
+                    isPlaying?()=>handleProcess('pause'):()=>handleProcess('play')
                 }
 
                 /> 
-            </div>
+            </button>
     </div>
   </> )
 }
