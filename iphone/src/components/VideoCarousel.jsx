@@ -50,7 +50,7 @@ export const VideoCarousel = () => {
 
     // handleProcess: switch for each video case: play, reset, video-end, pause; 'i' is the video id till id=3
     const handleProcess = (type, i)=>{
-        switch (key) {
+        switch (type) {
             case 'video-end':
                 setVideo(prev=>({
                     ...prev, isEnd:true, videoId: i+1
@@ -80,7 +80,7 @@ export const VideoCarousel = () => {
                 }))
                 break;
             default:
-                break;
+                return video;
         }
     }
 
