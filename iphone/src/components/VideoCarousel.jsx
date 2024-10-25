@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { hightlightsSlides } from '../constants'
 import gsap from 'gsap';
 import { pauseImg, playImg, replayImg } from '../utils';
+import { useGSAP } from '@gsap/react';
 
 export const VideoCarousel = () => {
     // useRefs
@@ -20,7 +21,24 @@ export const VideoCarousel = () => {
     // destructure (extract) all the above video properties
     const {videoId, startPlay, isPlaying, isEnd, isLastVideo} = video;
 
-    // videos performance in the loadedData array
+    // animate the video loaded targeting <video>
+    useGSAP(()=>{
+        gsap.to('#video', {
+            scrollTrigger:{
+                trigger: '#video',
+                toggleActions: 'restart none none none'
+            },
+            onComplete: ()=>{
+                // set the particular video in start mode
+                setVideo(prev=>({
+                    ...prev, 
+                    startPlay: true, isPlaying: true,
+                }))
+            }
+        } )
+    }, [videoId, isEnd])
+
+    // videos performance in the loadedData
     useEffect(()=>{
         // pause the video if we came to end and no longer playing the video
         if(loadedData.length > 3){
@@ -84,6 +102,10 @@ export const VideoCarousel = () => {
         }
     }
 
+    // set loaded data 
+    const handleLoadedMetadata = (e,i)=>setLoadedData(prev=>[...prev, e]);
+    
+
   return (<>
     <div className='flex items-center'>
         {
@@ -98,12 +120,14 @@ export const VideoCarousel = () => {
                             muted 
                             playsInline={true} 
                             preload='auto'
-
+                            id='video'
                             ref={(el)=>videoRef.current[i] = el}
 
                             onPlay={()=>setVideo(prev=>({
                                 ...prev, isPlaying:true
                             }))}
+
+                            onLoadedMetadata = {(e)=>handleLoadedMetadata(e,i)}
                             >
                                 <source src={list.video} type='video/mp4'/>
                             </video>
