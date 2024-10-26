@@ -59,12 +59,30 @@ export const VideoCarousel = () => {
         //grab the video <span> element
         let span = videoSpanRef.current;
 
-        // animate the progress of video
-        let anim = gsap.to(span[videoId], {
-            onUpdate: ()=>{},
-            onComplete: ()=>{}
-        })
-    }, [videoId, startPlay])
+        if(span[videoId]){
+            // animate the progress of video
+            let anim = gsap.to(span[videoId], {
+                onUpdate: ()=>{
+                    // get the video progress 
+                    const progress = Math.ceil(anim.progress()*100);
+
+                    if(progress != currentProgress){
+                       currentProgress = progress;
+                       
+                       // set the animation progress bar according to window width
+                       gsap.to(videoDivRef.current[videoId],{
+                        width: window.innerWidth < 700? "10vw" // mobile
+                        : window.innerWidth < 1200
+                        ? "10vw" // tablet
+                        : "4vw", // laptop
+                       })
+                    }
+                },
+                onComplete: ()=>{}
+            })
+        }, [videoId, startPlay])
+        }
+
 
     // handleProcess: switch for each video case: play, reset, video-end, pause; 'i' is the video id till id=3
     const handleProcess = (type, i)=>{
