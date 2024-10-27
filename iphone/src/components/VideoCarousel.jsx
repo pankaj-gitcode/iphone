@@ -53,35 +53,45 @@ export const VideoCarousel = () => {
 
     // videoId changes & video start to play
     useEffect(()=>{
-        // initial video progress is 0
-        const currentProgress = 0;
+            // initial video progress is 0
+            let currentProgress = 0;
 
-        //grab the video <span> element
-        let span = videoSpanRef.current;
+            //grab the video <span> element
+            let span = videoSpanRef.current;
 
-        if(span[videoId]){
-            // animate the progress of video
-            let anim = gsap.to(span[videoId], {
-                onUpdate: ()=>{
-                    // get the video progress 
-                    const progress = Math.ceil(anim.progress()*100);
+            if(span[videoId]){
+                // animate the progress of video
+                let anim = gsap.to(span[videoId], {
+                    onUpdate: ()=>{
+                        // get the video progress 
+                        const progress = Math.ceil(anim.progress()*100);
 
-                    if(progress != currentProgress){
-                       currentProgress = progress;
-                       
-                       // set the animation progress bar according to window width
-                       gsap.to(videoDivRef.current[videoId],{
-                        width: window.innerWidth < 700? "10vw" // mobile
-                        : window.innerWidth < 1200
-                        ? "10vw" // tablet
-                        : "4vw", // laptop
-                       })
-                    }
-                },
-                onComplete: ()=>{}
-            })
-        }, [videoId, startPlay])
-        }
+                        if(progress != currentProgress){
+                        currentProgress = progress;
+                        
+                        // set the length of animation progress bar according to window width
+                        gsap.to(videoDivRef.current[videoId],{
+                            width: window.innerWidth < 700? "10vw" // mobile
+                            : window.innerWidth < 1200
+                            ? "10vw" // tablet
+                            : "4vw", // laptop
+                        })
+                        // change the background color of progress bar while video plays
+                        gsap.to(span[videoId], {
+                            width: `${currentProgress}%`,
+                            backgroundColor: 'white',
+                            
+                        })
+                        }
+                    },
+                    onComplete: ()=>{}
+                })
+            }
+
+
+
+        },[videoId, startPlay])
+        
 
 
     // handleProcess: switch for each video case: play, reset, video-end, pause; 'i' is the video id till id=3
