@@ -21,6 +21,15 @@ export const VideoCarousel = () => {
     // destructure (extract) all the above video properties
     const {videoId, startPlay, isPlaying, isEnd, isLastVideo} = video;
 
+    // animating the progression bar w.r.t video 
+    useGSAP(()=>{
+        gsap.to('#slider', {
+            transform: `translateX(${-100 * videoId})`,
+            duration:1,
+            ease: 'power2.inOut'
+        })
+    }, [])
+
     // animate the video loaded targeting <video>
     useGSAP(()=>{
         gsap.to('#video', {
@@ -84,11 +93,32 @@ export const VideoCarousel = () => {
                         })
                         }
                     },
-                    onComplete: ()=>{}
+                    onComplete: ()=>{
+                        if(isPlaying){
+                            gsap.to(videoDivRef.current[videoId],{
+                                width: '12px',
+                            })
+                            gsap.to(span[videoId],{backgroudColor:'#afafaf'})
+                        }
+                    }
                 })
+                if(videoId === 0){
+                    anim.restart()
+                }
+                // update the progress bar
+                const animUpdate = ()=>{
+                    anim.progress(
+                        videoRef.current[videoId].currentTie / hightlightsSlides[videoId].videoDuration
+                    );
+                };
+                 if(isPlaying){
+                    // ticker to update the progress bar
+                    gsap.ticker.add(animUpdate);
+                 }else{
+                    // remove the ticker when thevideo is paused, progress bar is stopped
+                    gsap.ticker.remove(animUpdate);
+                 }
             }
-
-
 
         },[videoId, startPlay])
         
@@ -151,6 +181,11 @@ export const VideoCarousel = () => {
                             id='video'
                             ref={(el)=>videoRef.current[i] = el}
 
+                            onEnded = {()=>
+                            i != 3
+                                ? handleProcess('video-end',i)
+                                : handleProcess('video-last')
+                            }
                             onPlay={()=>setVideo(prev=>({
                                 ...prev, isPlaying:true
                             }))}
