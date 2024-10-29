@@ -24,7 +24,7 @@ export const VideoCarousel = () => {
     // animating the progression bar w.r.t video 
     useGSAP(()=>{
         gsap.to('#slider', {
-            transform: `translateX(${-100 * videoId})`,
+            transform: `translateX(${-100 * videoId}%)`,
             duration:1,
             ease: 'power2.inOut'
         })
@@ -108,7 +108,7 @@ export const VideoCarousel = () => {
                 // update the progress bar
                 const animUpdate = ()=>{
                     anim.progress(
-                        videoRef.current[videoId].currentTie / hightlightsSlides[videoId].videoDuration
+                        videoRef.current[videoId].currentTime / hightlightsSlides[videoId].videoDuration
                     );
                 };
                  if(isPlaying){
